@@ -1,3 +1,5 @@
+import { useGetPuppyQuery , useDeletePuppyMutation, useGetPuppiesQuery} from "./puppySlice";
+
 /**
  * @component
  * Shows comprehensive information about the selected puppy, if there is one.
@@ -5,11 +7,25 @@
  */
 export default function PuppyDetails({ selectedPuppyId, setSelectedPuppyId }) {
   // TODO: Grab data from the `getPuppy` query
+  const response = useGetPuppyQuery(selectedPuppyId);
+  const puppy = response?.data?.data?.player;
+  const isLoading = response?.isLoading;
 
-  // TODO: Use the `deletePuppy` mutation to remove a puppy when the button is clicked
+  // const {refetch} = useGetPuppiesQuery();
+  // const {refetch2} = useGetPuppyQuery();
 
-  function removePuppy(id) {
-    setSelectedPuppyId();
+// TODO: Use the `deletePuppy` mutation to remove a puppy when the button is clicked
+  const [deletePuppy] = useDeletePuppyMutation();
+
+  async function removePuppy(id) {
+    //setSelectedPuppyId(id);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    if(id){
+      await deletePuppy(id);
+      // refetch();
+      // refetch2();
+      window.location.reload();
+    }
   }
 
   // There are 3 possibilities:
